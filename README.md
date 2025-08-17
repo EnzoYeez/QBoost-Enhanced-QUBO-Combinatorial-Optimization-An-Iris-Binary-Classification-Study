@@ -85,38 +85,6 @@ We recommend plotting 2D projections (e.g., petal-length vs. petal-width) to vis
 
 ---
 
-## Pipeline (Mermaid)
-
-```mermaid
-flowchart LR
-  A[Data: Iris (Setosa vs. Versicolor)] --> B[Preprocess: clean, z-score, stratified split]
-  B --> C[Weak Learners: thresholded linear projections on 1–4 feature combos]
-  C --> D[QUBO Build: loss + λ‖z‖₀ + ρ(∑z - K)² → Q, c]
-  D --> E[Simulated Annealing: search z*]
-  E --> F[Strong Classifier: sign(∑ z*_j h_j(x))]
-  F --> G[Evaluate: accuracy, precision, confusion matrix]
-```
-
----
-
-## Configuration
-
-Key hyperparameters:
-- `lambda (λ)`: sparsity weight (try 0.6–1.0; sweet spot often around ~0.85). fileciteturn0file0
-- `K`: target max number of weak learners (e.g., 11). fileciteturn0file0
-- `rho (ρ)`: penalty for exceeding `K` in the soft constraint. fileciteturn0file0
-- SA schedule: `t0`, `tmin`, `alpha`, `iters` (cooling & exploration). fileciteturn0file0
-
----
-
-## References
-
-- Arunachalam & Maity (ICML 2020), *Quantum Boosting*.  
-- Neven et al. (ACML 2012), *QBoost: Large Scale Classifier Training with Adiabatic Quantum Optimization*.  
-- (Chinese) Report and experiment details from the attached modeling document (APMCM 2025). fileciteturn0file0
-
----
-
 ## License
 
 This work is released under the **MIT License** (see `LICENSE`).
