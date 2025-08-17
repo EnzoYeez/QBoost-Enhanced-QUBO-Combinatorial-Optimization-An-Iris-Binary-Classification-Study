@@ -26,53 +26,6 @@ This project explores a **QBoost** ensemble framed as a **QUBO (Quadratic Uncons
 
 ---
 
-## Method
-
-### 1) Weak classifiers
-Each weak classifier is a thresholded linear projection on a feature subset \\(S_j\\subseteq\\{1,2,3,4\\}\\):  
-\\[
-h_j(x)=\\mathrm{sign}\\big(\\sum_{k\\in S_j} x_k \\, -\\, \\theta_j\\big),\\quad h_j: \\mathbb{R}^4\\to\\{-1,+1\\}.
-\\]
-We enumerate all non-empty subsets and sample multiple thresholds to get **130** diverse, low-capacity candidates. fileciteturn0file0
-
-### 2) QBoost as QUBO
-Let \\(z\\in\\{0,1\\}^M\\) indicate which weak learners are selected; we minimize a squared-error surrogate plus sparsity:
-\\[
-\\min_{z\\in\\{0,1\\}^M} \\; z^\\top Q z + c^\\top z,\\quad
-Q = \\tilde Q + \\rho\\,\\mathbf{1}\\mathbf{1}^\\top,\\; c = \\tilde c + \\lambda\\,\\mathbf{1} - 2\\rho K\\,\\mathbf{1}.
-\\]
-Here \\(\\lambda\\) controls sparsity, \\(K\\) is the desired maximum number of weak learners, and \\(\\rho\\) penalizes violations of the cardinality target. The form is **standard QUBO**, suitable for simulated annealing. fileciteturn0file0
-
-### 3) Solver
-We use a simulated annealer (Kaiwu SDK compatible) with a cooling schedule and Metropolis acceptance to search \\(z\\)-space efficiently. Typical settings: \\(T_0=10\\), \\(T_{\\min}=10^{-3}\\), cooling factor \\(\\alpha=0.995\\), max iters \\(10^5\\). fileciteturn0file0
-
----
-
-## Repository Structure (suggested)
-
-```
-qboost-qubo-iris/
-├─ data/
-│  ├─ iris_binary_processed.csv   # full processed subset
-│  ├─ iris_train.csv              # stratified split (train)
-│  └─ iris_test.csv               # stratified split (test)
-├─ src/
-│  ├─ build_weak_learners.py      # enumerate feature subsets & thresholds
-│  ├─ build_qubo.py               # construct Q, c (loss + regularizers)
-│  ├─ solve_qubo_sa.py            # simulated annealing search for z*
-│  ├─ evaluate.py                 # metrics, confusion matrix, plots
-│  └─ utils.py                    # I/O, seed control, helpers
-├─ notebooks/
-│  └─ 00_exploration.ipynb        # EDA & sanity checks
-├─ results/
-│  ├─ best_subset.json            # indices of selected weak learners
-│  ├─ metrics.json                # accuracy/precision/recall/F1
-│  └─ figures/                    # decision boundaries, heatmaps
-└─ README.md
-```
-
----
-
 ## Installation
 
 ```bash
